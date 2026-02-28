@@ -14,7 +14,7 @@ iface br1 inet static
     bridge_stp off
     bridge_fd 0
 ```
-### 3. Насройка Nat через iptables что бы подняся интерфейс советую командой `systemctl restart networking` 
+### 3. Настройка Nat через iptables что бы подняся интерфейс советую командой `systemctl restart networking` 
 #### 3.1  Включаем IP Forwarding 
 ```bash
 echo "net.ipv4.ip_forward=1" > /etc/sysctl.d/99-opennebula-nat.conf
@@ -58,4 +58,54 @@ iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 2222 -j DNAT --to-destinati
 <img width="947" height="742" alt="изображение" src="https://github.com/user-attachments/assets/64035a96-15ab-4841-afc8-f032d4a65dba" />
 
 #### Теперь нажимаем `Update` заходим в `Addresses` нажимаем на `+Address Range` и выбираем так как показано на скрине, в size пишем сколько вы хотите создать mac адресов, точнее лимит на колличество устройств
+
 <img width="902" height="357" alt="изображение" src="https://github.com/user-attachments/assets/1316a7d9-c01e-4f04-80bd-07784f4aaf21" />
+
+### 6. Поднимаем dns bind9 
+##### 6.1 Устанавливаем bind9
+```bash
+apt update
+apt install bind9
+```
+#### 6.2 Настраиваем `/etc/bind/named.conf.options`
+```bash
+nano /etc/bind/named.conf.options
+```
+##### Сам файл `/etc/bind/named.conf.options`
+
+<img width="955" height="586" alt="изображение" src="https://github.com/user-attachments/assets/fc02e7b8-86d5-4403-8b92-ab1e7959a8e4" />
+
+#### 6.3 Чтобы настройки применились пишем команду `systemctl restart bind9`
+
+### 7. Поднимаем dhcp сервер на ранее созданом `br1`.
+#### 7.1 устанавливаем нужный пакет
+```bash
+sudo apt update
+sudo apt install isc-dhcp-server
+```
+#### 7.2 Что бы dhcp работал именно на `br1` нужно отредатировать файл `/etc/default/isc-dhcp-server` 
+```bash
+sudo sed -i 's/^INTERFACESv4=".*"/INTERFACESv4="br1"/' /etc/default/isc-dhcp-server
+```
+#### 7.3 Так же редактируем файл конфигурации `sudo nano /etc/dhcp/dhcpd.conf`, то что приведено будет ниже, нужно просто вставить в конец файла
+```bash
+subnet 192.168.100.0 netmask 255.255.255.0 {
+  range 192.168.100.2 192.168.100.254;
+  option routers 192.168.100.1;
+
+  # Указываем IP вашего сервера как основной DNS
+  option domain-name-servers 192.168.100.1; 
+
+  option subnet-mask 255.255.255.0;
+  option broadcast-address 192.168.100.255;
+  default-lease-time 600;
+  max-lease-time 7200;
+}
+```
+#### 7.4 Перезапускаем сервис и смотрим статус если статус active поздравляю dhcp работает 
+```bash
+sudo systemctl restart isc-dhcp-server
+systemctl status isc-dhcp-server
+```
+
+
