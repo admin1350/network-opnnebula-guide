@@ -45,7 +45,7 @@ iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 2222 -j DNAT --to-destinati
 ```
 ### 5. Последний штрих 
 #### 5.1 Заходим в Network > Virtual Network и создаем сеть
-##### В  `General` пишем напрмиер `internet`
+##### В  `General` пишем name, например `internet`
 
 <img width="599" height="423" alt="изображение" src="https://github.com/user-attachments/assets/a13f8068-0f09-463e-adf3-e4288ef9f550" />
 
@@ -57,3 +57,5 @@ iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 2222 -j DNAT --to-destinati
 
 <img width="947" height="742" alt="изображение" src="https://github.com/user-attachments/assets/64035a96-15ab-4841-afc8-f032d4a65dba" />
 
+#### Теперь нажимаем `Update` заходим в `Addresses` нажимаем на `+Address Range` и выбираем так как показано на скрине, в size пишем сколько вы хотите создать mac адресов, точнее лимит на колличество устройств
+<img width="902" height="357" alt="изображение" src="https://github.com/user-attachments/assets/1316a7d9-c01e-4f04-80bd-07784f4aaf21" />
