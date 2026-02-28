@@ -55,7 +55,7 @@ iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 2222 -j DNAT --to-destinati
 
 ##### В 'Context' делаем как показано на рис снизу
 
-<img width="947" height="742" alt="изображение" src="https://github.com/user-attachments/assets/64035a96-15ab-4841-afc8-f032d4a65dba" />
+<img width="1022" height="719" alt="изображение" src="https://github.com/user-attachments/assets/7d813a21-2c31-45d2-8542-f32906076edf" />
 
 #### Теперь нажимаем `Update` заходим в `Addresses` нажимаем на `+Address Range` и выбираем так как показано на скрине, в size пишем сколько вы хотите создать mac адресов, точнее лимит на колличество устройств
 
